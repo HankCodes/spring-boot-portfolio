@@ -1,5 +1,6 @@
 package dev.henrik.holstad.portfolio.controllers;
 
+import dev.henrik.holstad.portfolio.exceptions.ResourceNotFoundException;
 import dev.henrik.holstad.portfolio.models.dao.Ticket;
 import dev.henrik.holstad.portfolio.models.dao.requests.TicketRequest;
 import dev.henrik.holstad.portfolio.repositories.TicketRepository;
@@ -16,6 +17,13 @@ public class TicketController {
     @GetMapping()
     public @ResponseBody Iterable<Ticket> getAllTickets() {
         return ticketRepository.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public @ResponseBody Ticket getTicketById(
+            @PathVariable Integer id
+    ) {
+        return ticketRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ticket not found"));
     }
 
     @PostMapping()
