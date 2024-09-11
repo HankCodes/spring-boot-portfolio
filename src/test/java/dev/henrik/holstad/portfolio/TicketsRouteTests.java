@@ -2,10 +2,13 @@ package dev.henrik.holstad.portfolio;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.henrik.holstad.portfolio.models.dao.Ticket;
+import dev.henrik.holstad.portfolio.models.dao.responses.ErrorResponse;
 import dev.henrik.holstad.portfolio.repositories.TicketRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,15 +29,9 @@ class TicketsRouteTests extends PostgresDatabaseContainer {
     @Autowired
     private TicketRepository ticketRepository;
 
-    @BeforeEach
-    void setUp() {
-        ticketRepository.deleteAll();
-    }
-
-
     @Test
     @Transactional
-    void createTicket() throws Exception {
+    void createTicket_withTitleAndDescription_returnsSuccess() throws Exception {
         String expectedTitle = "test";
         String expectedDescription = "test";
 
@@ -46,8 +43,96 @@ class TicketsRouteTests extends PostgresDatabaseContainer {
                 .getContentAsString();
         Ticket ticket = new ObjectMapper().readValue(json, Ticket.class);
 
-        assertEquals("test", ticket.getTitle());
-        assertEquals("test", ticket.getDescription());
+        assertEquals(expectedTitle, ticket.getTitle());
+        assertEquals(expectedDescription, ticket.getDescription());
+    }
+
+    @Test
+    @Transactional
+    void createTicket_withEmptyDescription_returnsSuccess() throws Exception {
+        String expectedTitle = "test";
+        String expectedDescription = "";
+
+        String json = mockMvc.perform(post("/tickets")
+                        .contentType("application/json")
+                        .content(String.format("{\"title\":\"%s\",\"description\":\"%s\"}", expectedTitle, expectedDescription)))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        Ticket ticket = new ObjectMapper().readValue(json, Ticket.class);
+
+        assertEquals(expectedTitle, ticket.getTitle());
+        assertEquals(expectedDescription, ticket.getDescription());
+    }
+
+    @Test
+    @Transactional
+    void createTicket_tooLongTitle_givesHttp400Response() throws Exception {
+        Integer expected = 400;
+        String title = "a".repeat(51);
+
+        String json = mockMvc.perform(post("/tickets")
+                        .contentType("application/json")
+                        .content(String.format("{\"title\":\"%s\"}", title)))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Integer actual = objectMapper.readValue(json, ErrorResponse.class).getStatus();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Transactional
+    void createTicket_tooShortTitle_givesHttp400Response() throws Exception {
+        Integer expected = 400;
+
+        String json = mockMvc.perform(post("/tickets")
+                        .contentType("application/json")
+                        .content("{\"title\":\"\"}"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Integer actual = objectMapper.readValue(json, ErrorResponse.class).getStatus();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Transactional
+    void createTicket_missingTitle_givesHttp400Response() throws Exception {
+        Integer expected = 400;
+
+        String json = mockMvc.perform(post("/tickets")
+                        .contentType("application/json")
+                        .content("{\"description\":\"desc\"}"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Integer actual = objectMapper.readValue(json, ErrorResponse.class).getStatus();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Transactional
+    void createTicket_tooLongDescription_givesHttp400Response() throws Exception {
+        Integer expected = 400;
+        String description = "a".repeat(501);
+
+        String json = mockMvc.perform(post("/tickets")
+                        .contentType("application/json")
+                        .content(String.format("{\"title\":\"title\", \"description\": \"%s\"}", description)))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Integer actual = objectMapper.readValue(json, ErrorResponse.class).getStatus();
+
+        assertEquals(expected, actual);
     }
 
     @Test
