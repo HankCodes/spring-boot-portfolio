@@ -27,10 +27,8 @@ dependencies {
     implementation("org.flywaydb:flyway-database-postgresql")
     implementation("org.postgresql:postgresql")
 
-    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation(project(":common"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.testcontainers:junit-jupiter:1.20.1")
-    testImplementation("org.testcontainers:postgresql")
     testImplementation("org.junit.jupiter:junit-jupiter-params")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
