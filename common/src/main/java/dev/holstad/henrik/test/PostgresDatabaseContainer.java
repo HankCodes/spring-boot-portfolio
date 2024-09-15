@@ -1,4 +1,4 @@
-package dev.henrik.holstad.portfolio;
+package dev.holstad.henrik.test;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
