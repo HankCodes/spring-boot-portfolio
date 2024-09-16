@@ -12,9 +12,13 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping(path = "/tickets")
 public class TicketController {
-    @Autowired
-    private TicketRepository ticketRepository;
+    private final TicketRepository ticketRepository;
 
+    @Autowired
+    TicketController(TicketRepository ticketRepository) {
+        this.ticketRepository = ticketRepository;
+
+    }
     @GetMapping()
     public @ResponseBody Iterable<Ticket> getAllTickets() {
         return ticketRepository.findAll();
