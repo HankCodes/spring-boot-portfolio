@@ -1,8 +1,10 @@
 package dev.henrik.holstad.portfolio.longrunningtask.controllers;
 
 import dev.henrik.holstad.portfolio.longrunningtask.exceptions.TaskServiceException;
+import dev.henrik.holstad.portfolio.longrunningtask.models.dao.LoginAuditLog;
 import dev.henrik.holstad.portfolio.longrunningtask.models.enums.TaskStatus;
 import dev.henrik.holstad.portfolio.longrunningtask.models.responses.TaskResponse;
+import dev.henrik.holstad.portfolio.longrunningtask.repositories.LogInAuditLogRepository;
 import dev.henrik.holstad.portfolio.longrunningtask.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,10 +17,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class LongRunningTaskController {
 
     TaskService taskService;
+    LogInAuditLogRepository logInAuditLogRepository;
 
     @Autowired
-    LongRunningTaskController(TaskService taskService) {
+    LongRunningTaskController(TaskService taskService, LogInAuditLogRepository logInAuditLogRepository) {
+        this.logInAuditLogRepository = logInAuditLogRepository;
         this.taskService = taskService;
+        LoginAuditLog logInAuditLog = new LoginAuditLog();
+        logInAuditLog.setResult(LoginAuditLog.Result.SUCCESS);
+        logInAuditLog.setUsername("admin");
+        this.logInAuditLogRepository.save(logInAuditLog);
     }
 
     @PostMapping()
