@@ -2,7 +2,7 @@ package dev.henrik.holstad.portfolio;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.henrik.holstad.portfolio.models.dao.Ticket;
-import dev.henrik.holstad.portfolio.models.dao.responses.ErrorResponse;
+import dev.henrik.holstad.portfolio.models.responses.ErrorResponse;
 import dev.henrik.holstad.portfolio.repositories.TicketRepository;
 import dev.holstad.henrik.test.PostgresDatabaseContainer;
 import jakarta.transaction.Transactional;

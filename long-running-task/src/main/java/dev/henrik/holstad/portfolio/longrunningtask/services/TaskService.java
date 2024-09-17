@@ -13,9 +13,8 @@ public class TaskService {
 
     @Async
     public void runTask() {
-        logger.info("Starting task");
-
         try {
+            logger.info("Fetching data from database");
             Thread.sleep(1000);
             logger.info("Task completed step 1");
 

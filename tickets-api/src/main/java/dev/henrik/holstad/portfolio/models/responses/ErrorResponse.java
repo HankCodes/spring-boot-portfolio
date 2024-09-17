@@ -1,4 +1,4 @@
-package dev.henrik.holstad.portfolio.models.dao.responses;
+package dev.henrik.holstad.portfolio.models.responses;
 
 import java.time.Instant;
 

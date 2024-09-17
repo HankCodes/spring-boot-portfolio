@@ -1,4 +1,4 @@
-package dev.henrik.holstad.portfolio.models.dao.requests;
+package dev.henrik.holstad.portfolio.models.requests;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

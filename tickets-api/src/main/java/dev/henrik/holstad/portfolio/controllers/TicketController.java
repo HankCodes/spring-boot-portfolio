@@ -2,7 +2,7 @@ package dev.henrik.holstad.portfolio.controllers;
 
 import dev.henrik.holstad.portfolio.exceptions.ResourceNotFoundException;
 import dev.henrik.holstad.portfolio.models.dao.Ticket;
-import dev.henrik.holstad.portfolio.models.dao.requests.TicketRequest;
+import dev.henrik.holstad.portfolio.models.requests.TicketRequest;
 import dev.henrik.holstad.portfolio.repositories.TicketRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
